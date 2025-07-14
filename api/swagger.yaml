@@ -1,0 +1,150 @@
+---
+swagger: "2.0"
+info:
+  description: "Easily and directly scan and block spam security threats in input."
+  version: "v1"
+  title: "spamapi"
+security:
+- Apikey: []
+paths:
+  /spam/detect/text-string:
+    post:
+      tags:
+      - "SpamDetection"
+      summary: "Perform AI spam detection and classification against input text string.\
+        \  Analyzes input content as well as embedded URLs with AI deep learnign to\
+        \ detect spam, phishing and other unsafe content.  Uses 25-75 API calls depending\
+        \ on model selected."
+      consumes:
+      - "application/json"
+      - "text/json"
+      - "application/*+json"
+      produces:
+      - "text/plain"
+      - "application/json"
+      - "text/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Spam detection request"
+        required: false
+        schema:
+          $ref: "#/definitions/SpamDetectionRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/SpamDetectionResponse"
+  /spam/detect/text-string/advanced:
+    post:
+      tags:
+      - "SpamDetection"
+      summary: "Perform advanced AI spam detection and classification against input\
+        \ text string.  Analyzes input content as well as embedded URLs with AI deep\
+        \ learnign to detect spam, phishing and other unsafe content.  Uses 25-100\
+        \ API calls depending on model selected."
+      consumes:
+      - "application/json"
+      - "text/json"
+      - "application/*+json"
+      produces:
+      - "text/plain"
+      - "application/json"
+      - "text/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Spam detection request"
+        required: false
+        schema:
+          $ref: "#/definitions/SpamDetectionAdvancedRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/SpamDetectionAdvancedResponse"
+securityDefinitions:
+  Apikey:
+    description: "Apikey"
+    type: "apiKey"
+    name: "Apikey"
+    in: "header"
+definitions:
+  SpamDetectionAdvancedRequest:
+    type: "object"
+    properties:
+      InputString:
+        type: "string"
+        description: "Input text string to detect spam against"
+      Model:
+        type: "string"
+        description: "Optional: Specify which AI model to use.  Possible choices are\
+          \ Normal and Advanced.  Default is Advanced."
+      AllowUnsolicitedSales:
+        type: "boolean"
+        description: "True if unsolicited sales should be allowed, false otherwise"
+      AllowPromotionalContent:
+        type: "boolean"
+        description: "True if promotional content should be allowed, false otherwise"
+      AllowPhishing:
+        type: "boolean"
+        description: "True if phishing should be allowed, false otherwise"
+    description: "AI advanced spam detection request"
+    example:
+      AllowPhishing: true
+      InputString: "InputString"
+      Model: "Model"
+      AllowUnsolicitedSales: true
+      AllowPromotionalContent: true
+  SpamDetectionAdvancedResponse:
+    type: "object"
+    properties:
+      CleanResult:
+        type: "boolean"
+        description: "True if the result is not spam (clean), and false otherwise"
+      ContainsSpam:
+        type: "boolean"
+        description: "True if the input text contains spam, false otherwise"
+      ContainsUnsolicitedSales:
+        type: "boolean"
+        description: "True if the input text contains unsolicited sales, false otherwise"
+      ContainsPromotionalContent:
+        type: "boolean"
+        description: "True if the input text contains promotional content, false otherwise"
+      ContainsPhishingAttempt:
+        type: "boolean"
+        description: "True if the input text contains a phishing attempt, false otherwise"
+    description: "Result of detecting spam using AI"
+    example:
+      ContainsSpam: true
+      ContainsUnsolicitedSales: true
+      ContainsPhishingAttempt: true
+      CleanResult: true
+      ContainsPromotionalContent: true
+  SpamDetectionRequest:
+    type: "object"
+    properties:
+      InputString:
+        type: "string"
+        example: "Get free crypto now!!!"
+        description: "Input text string to detect spam against"
+      Model:
+        type: "string"
+        example: "Advanced"
+        description: "Optional: Specify which AI model to use.  Possible choices are\
+          \ Normal and Advanced.  Default is Advanced."
+    description: "AI spam detection request"
+    example:
+      InputString: "Get free crypto now!!!"
+      Model: "Advanced"
+  SpamDetectionResponse:
+    type: "object"
+    properties:
+      CleanResult:
+        type: "boolean"
+        description: "True if the result is not spam (clean), and false otherwise"
+    description: "Result of detecting spam using AI"
+    example:
+      CleanResult: true
