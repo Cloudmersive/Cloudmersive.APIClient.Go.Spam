@@ -36,6 +36,39 @@ paths:
           description: "OK"
           schema:
             $ref: "#/definitions/SpamDetectionResponse"
+  /spam/detect/file:
+    post:
+      tags:
+      - "SpamDetection"
+      summary: "Perform AI spam detection and classification on an input image or\
+        \ document (PDF or DOCX).  Analyzes input content as well as embedded URLs\
+        \ with AI deep learnign to detect spam, phishing and other unsafe content.\
+        \  Uses 100-125 API calls depending on model selected."
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "text/plain"
+      - "application/json"
+      - "text/json"
+      parameters:
+      - name: "model"
+        in: "header"
+        description: "Model to use; default setting is Advanced"
+        required: false
+        type: "string"
+        default: "Advanced"
+        x-exportParamName: "Model"
+        x-optionalDataType: "String"
+      - name: "inputFile"
+        in: "formData"
+        required: false
+        type: "file"
+        x-exportParamName: "InputFile"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/SpamDetectionResponse"
   /spam/detect/text-string/advanced:
     post:
       tags:
@@ -65,6 +98,102 @@ paths:
           description: "OK"
           schema:
             $ref: "#/definitions/SpamDetectionAdvancedResponse"
+  /spam/detect/form-submission/advanced:
+    post:
+      tags:
+      - "SpamDetection"
+      summary: "Perform advanced AI spam detection and classification against a form\
+        \ submission.  Analyzes form input content as well as embedded URLs with AI\
+        \ deep learnign to detect spam, phishing and other unsafe content.  Uses 25-100\
+        \ API calls depending on model selected."
+      consumes:
+      - "application/json"
+      - "text/json"
+      - "application/*+json"
+      produces:
+      - "text/plain"
+      - "application/json"
+      - "text/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Spam detection request"
+        required: false
+        schema:
+          $ref: "#/definitions/SpamDetectionAdvancedFormSubmissionRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/SpamDetectionFormSubmissionAdvancedResponse"
+  /spam/detect/file/advanced:
+    post:
+      tags:
+      - "SpamDetection"
+      summary: "Perform advanced AI spam detection and classification against input\
+        \ text string.  Analyzes input content as well as embedded URLs with AI deep\
+        \ learnign to detect spam, phishing and other unsafe content.  Uses 25-100\
+        \ API calls depending on model selected."
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "text/plain"
+      - "application/json"
+      - "text/json"
+      parameters:
+      - name: "model"
+        in: "header"
+        description: "Optional: Specify which AI model to use.  Possible choices are\
+          \ Normal and Advanced.  Default is Advanced."
+        required: false
+        type: "string"
+        default: "Advanced"
+        x-exportParamName: "Model"
+        x-optionalDataType: "String"
+      - name: "preprocessing"
+        in: "header"
+        description: "Optional: Specify which preprocessing to Use.  Possible choices\
+          \ are None, Compatability and Auto.  Default is Auto."
+        required: false
+        type: "string"
+        default: "Auto"
+        x-exportParamName: "Preprocessing"
+        x-optionalDataType: "String"
+      - name: "allowPhishing"
+        in: "header"
+        description: "True if phishing should be allowed, false otherwise"
+        required: false
+        type: "boolean"
+        default: false
+        x-exportParamName: "AllowPhishing"
+        x-optionalDataType: "Bool"
+      - name: "allowUnsolicitedSales"
+        in: "header"
+        description: "True if unsolicited sales should be allowed, false otherwise"
+        required: false
+        type: "boolean"
+        default: false
+        x-exportParamName: "AllowUnsolicitedSales"
+        x-optionalDataType: "Bool"
+      - name: "allowPromotionalContent"
+        in: "header"
+        description: "True if promotional content should be allowed, false otherwise"
+        required: false
+        type: "boolean"
+        default: true
+        x-exportParamName: "AllowPromotionalContent"
+        x-optionalDataType: "Bool"
+      - name: "inputFile"
+        in: "formData"
+        required: false
+        type: "file"
+        x-exportParamName: "InputFile"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/SpamDetectionAdvancedResponse"
 securityDefinitions:
   Apikey:
     description: "Apikey"
@@ -72,38 +201,92 @@ securityDefinitions:
     name: "Apikey"
     in: "header"
 definitions:
+  SpamDetectionAdvancedFormField:
+    type: "object"
+    properties:
+      FieldTitle:
+        type: "string"
+        example: "LeadCompanyName"
+        description: "Title of the field"
+      FieldValue:
+        type: "string"
+        example: "Acme, Inc."
+        description: "Value of the field"
+    description: "Form field submitted to run spam detection on"
+    example:
+      FieldValue: "Acme, Inc."
+      FieldTitle: "LeadCompanyName"
+  SpamDetectionAdvancedFormSubmissionRequest:
+    type: "object"
+    properties:
+      InputFormFields:
+        type: "array"
+        description: "Form fields and values that you received in your form submission"
+        items:
+          $ref: "#/definitions/SpamDetectionAdvancedFormField"
+      AllowUnsolicitedSales:
+        type: "boolean"
+        example: false
+        description: "True if unsolicited sales should be allowed, false otherwise"
+      AllowPromotionalContent:
+        type: "boolean"
+        example: false
+        description: "True if promotional content should be allowed, false otherwise"
+      AllowPhishing:
+        type: "boolean"
+        example: false
+        description: "True if phishing should be allowed, false otherwise"
+    description: "AI advanced spam detection request"
+    example:
+      AllowPhishing: false
+      InputFormFields:
+      - FieldValue: "Acme, Inc."
+        FieldTitle: "LeadCompanyName"
+      - FieldValue: "Acme, Inc."
+        FieldTitle: "LeadCompanyName"
+      AllowUnsolicitedSales: false
+      AllowPromotionalContent: false
   SpamDetectionAdvancedRequest:
     type: "object"
     properties:
       InputString:
         type: "string"
+        example: "Buy bitcoin now!!!!"
         description: "Input text string to detect spam against"
       Model:
         type: "string"
+        example: "Advanced"
         description: "Optional: Specify which AI model to use.  Possible choices are\
           \ Normal and Advanced.  Default is Advanced."
       AllowUnsolicitedSales:
         type: "boolean"
+        example: false
         description: "True if unsolicited sales should be allowed, false otherwise"
       AllowPromotionalContent:
         type: "boolean"
+        example: false
         description: "True if promotional content should be allowed, false otherwise"
       AllowPhishing:
         type: "boolean"
+        example: false
         description: "True if phishing should be allowed, false otherwise"
     description: "AI advanced spam detection request"
     example:
-      AllowPhishing: true
-      InputString: "InputString"
-      Model: "Model"
-      AllowUnsolicitedSales: true
-      AllowPromotionalContent: true
+      AllowPhishing: false
+      InputString: "Buy bitcoin now!!!!"
+      Model: "Advanced"
+      AllowUnsolicitedSales: false
+      AllowPromotionalContent: false
   SpamDetectionAdvancedResponse:
     type: "object"
     properties:
       CleanResult:
         type: "boolean"
         description: "True if the result is not spam (clean), and false otherwise"
+      SpamRiskLevel:
+        type: "number"
+        format: "double"
+        description: "Overall spam risk level between 0.0 and 1.0"
       ContainsSpam:
         type: "boolean"
         description: "True if the input text contains spam, false otherwise"
@@ -116,11 +299,50 @@ definitions:
       ContainsPhishingAttempt:
         type: "boolean"
         description: "True if the input text contains a phishing attempt, false otherwise"
+      AnalysisRationale:
+        type: "string"
+        description: "Rationale for why the conclusion was formed"
     description: "Result of detecting spam using AI"
     example:
       ContainsSpam: true
       ContainsUnsolicitedSales: true
       ContainsPhishingAttempt: true
+      SpamRiskLevel: 0.8008281904610115
+      AnalysisRationale: "AnalysisRationale"
+      CleanResult: true
+      ContainsPromotionalContent: true
+  SpamDetectionFormSubmissionAdvancedResponse:
+    type: "object"
+    properties:
+      CleanResult:
+        type: "boolean"
+        description: "True if the result is not spam (clean), and false otherwise"
+      SpamRiskLevel:
+        type: "number"
+        format: "double"
+        description: "Overall spam risk level between 0.0 and 1.0"
+      ContainsSpam:
+        type: "boolean"
+        description: "True if the input text contains spam, false otherwise"
+      ContainsUnsolicitedSales:
+        type: "boolean"
+        description: "True if the input text contains unsolicited sales, false otherwise"
+      ContainsPromotionalContent:
+        type: "boolean"
+        description: "True if the input text contains promotional content, false otherwise"
+      ContainsPhishingAttempt:
+        type: "boolean"
+        description: "True if the input text contains a phishing attempt, false otherwise"
+      AnalysisRationale:
+        type: "string"
+        description: "Rationale for why the conclusion was formed"
+    description: "Result of detecting spam using AI"
+    example:
+      ContainsSpam: true
+      ContainsUnsolicitedSales: true
+      ContainsPhishingAttempt: true
+      SpamRiskLevel: 0.8008281904610115
+      AnalysisRationale: "AnalysisRationale"
       CleanResult: true
       ContainsPromotionalContent: true
   SpamDetectionRequest:

@@ -10,7 +10,7 @@
 package Go-CloudmersiveSpamApiClient
 
 // Result of detecting spam using AI
-type SpamDetectionAdvancedResponse struct {
+type SpamDetectionFormSubmissionAdvancedResponse struct {
 	// True if the result is not spam (clean), and false otherwise
 	CleanResult bool `json:"CleanResult,omitempty"`
 	// Overall spam risk level between 0.0 and 1.0

@@ -16,6 +16,8 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"github.com/antihax/optional"
+	"os"
 )
 
 // Linger please
@@ -24,6 +26,391 @@ var (
 )
 
 type SpamDetectionApiService service
+
+/* 
+SpamDetectionApiService Perform advanced AI spam detection and classification against input text string.  Analyzes input content as well as embedded URLs with AI deep learnign to detect spam, phishing and other unsafe content.  Uses 25-100 API calls depending on model selected.
+ * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param optional nil or *SpamDetectionApiSpamDetectFileAdvancedPostOpts - Optional Parameters:
+     * @param "Model" (optional.String) -  Optional: Specify which AI model to use.  Possible choices are Normal and Advanced.  Default is Advanced.
+     * @param "Preprocessing" (optional.String) -  Optional: Specify which preprocessing to Use.  Possible choices are None, Compatability and Auto.  Default is Auto.
+     * @param "AllowPhishing" (optional.Bool) -  True if phishing should be allowed, false otherwise
+     * @param "AllowUnsolicitedSales" (optional.Bool) -  True if unsolicited sales should be allowed, false otherwise
+     * @param "AllowPromotionalContent" (optional.Bool) -  True if promotional content should be allowed, false otherwise
+     * @param "InputFile" (optional.Interface of *os.File) - 
+
+@return SpamDetectionAdvancedResponse
+*/
+
+type SpamDetectionApiSpamDetectFileAdvancedPostOpts struct { 
+	Model optional.String
+	Preprocessing optional.String
+	AllowPhishing optional.Bool
+	AllowUnsolicitedSales optional.Bool
+	AllowPromotionalContent optional.Bool
+	InputFile optional.Interface
+}
+
+func (a *SpamDetectionApiService) SpamDetectFileAdvancedPost(ctx context.Context, localVarOptionals *SpamDetectionApiSpamDetectFileAdvancedPostOpts) (SpamDetectionAdvancedResponse, *http.Response, error) {
+	var (
+		localVarHttpMethod = strings.ToUpper("Post")
+		localVarPostBody   interface{}
+		localVarFileName   string
+		localVarFileBytes  []byte
+		localVarReturnValue SpamDetectionAdvancedResponse
+	)
+
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/spam/detect/file/advanced"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHttpContentTypes := []string{"multipart/form-data"}
+
+	// set Content-Type header
+	localVarHttpContentType := selectHeaderContentType(localVarHttpContentTypes)
+	if localVarHttpContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHttpContentType
+	}
+
+	// to determine the Accept header
+	localVarHttpHeaderAccepts := []string{"text/plain", "application/json", "text/json"}
+
+	// set Accept header
+	localVarHttpHeaderAccept := selectHeaderAccept(localVarHttpHeaderAccepts)
+	if localVarHttpHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
+	}
+	if localVarOptionals != nil && localVarOptionals.Model.IsSet() {
+		localVarHeaderParams["model"] = parameterToString(localVarOptionals.Model.Value(), "")
+	}
+	if localVarOptionals != nil && localVarOptionals.Preprocessing.IsSet() {
+		localVarHeaderParams["preprocessing"] = parameterToString(localVarOptionals.Preprocessing.Value(), "")
+	}
+	if localVarOptionals != nil && localVarOptionals.AllowPhishing.IsSet() {
+		localVarHeaderParams["allowPhishing"] = parameterToString(localVarOptionals.AllowPhishing.Value(), "")
+	}
+	if localVarOptionals != nil && localVarOptionals.AllowUnsolicitedSales.IsSet() {
+		localVarHeaderParams["allowUnsolicitedSales"] = parameterToString(localVarOptionals.AllowUnsolicitedSales.Value(), "")
+	}
+	if localVarOptionals != nil && localVarOptionals.AllowPromotionalContent.IsSet() {
+		localVarHeaderParams["allowPromotionalContent"] = parameterToString(localVarOptionals.AllowPromotionalContent.Value(), "")
+	}
+    var localVarFile *os.File
+	if localVarOptionals != nil && localVarOptionals.InputFile.IsSet() {
+		localVarFileOk := false
+		localVarFile, localVarFileOk = localVarOptionals.InputFile.Value().(*os.File)
+		if !localVarFileOk {
+				return localVarReturnValue, nil, reportError("inputFile should be *os.File")
+		}
+	}
+	if localVarFile != nil {
+		fbs, _ := ioutil.ReadAll(localVarFile)
+		localVarFileBytes = fbs
+		localVarFileName = localVarFile.Name()
+		localVarFile.Close()
+	}
+	if ctx != nil {
+		// API Key Authentication
+		if auth, ok := ctx.Value(ContextAPIKey).(APIKey); ok {
+			var key string
+			if auth.Prefix != "" {
+				key = auth.Prefix + " " + auth.Key
+			} else {
+				key = auth.Key
+			}
+			localVarHeaderParams["Apikey"] = key
+			
+		}
+	}
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHttpResponse, err := a.client.callAPI(r)
+	if err != nil || localVarHttpResponse == nil {
+		return localVarReturnValue, localVarHttpResponse, err
+	}
+
+	localVarBody, err := ioutil.ReadAll(localVarHttpResponse.Body)
+	localVarHttpResponse.Body.Close()
+	if err != nil {
+		return localVarReturnValue, localVarHttpResponse, err
+	}
+
+	if localVarHttpResponse.StatusCode < 300 {
+		// If we succeed, return the data, otherwise pass on to decode error.
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+		if err == nil { 
+			return localVarReturnValue, localVarHttpResponse, err
+		}
+	}
+
+	if localVarHttpResponse.StatusCode >= 300 {
+		newErr := GenericSwaggerError{
+			body: localVarBody,
+			error: localVarHttpResponse.Status,
+		}
+		
+		if localVarHttpResponse.StatusCode == 200 {
+			var v SpamDetectionAdvancedResponse
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+				if err != nil {
+					newErr.error = err.Error()
+					return localVarReturnValue, localVarHttpResponse, newErr
+				}
+				newErr.model = v
+				return localVarReturnValue, localVarHttpResponse, newErr
+		}
+		
+		return localVarReturnValue, localVarHttpResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHttpResponse, nil
+}
+
+/* 
+SpamDetectionApiService Perform AI spam detection and classification on an input image or document (PDF or DOCX).  Analyzes input content as well as embedded URLs with AI deep learnign to detect spam, phishing and other unsafe content.  Uses 100-125 API calls depending on model selected.
+ * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param optional nil or *SpamDetectionApiSpamDetectFilePostOpts - Optional Parameters:
+     * @param "Model" (optional.String) -  Model to use; default setting is Advanced
+     * @param "InputFile" (optional.Interface of *os.File) - 
+
+@return SpamDetectionResponse
+*/
+
+type SpamDetectionApiSpamDetectFilePostOpts struct { 
+	Model optional.String
+	InputFile optional.Interface
+}
+
+func (a *SpamDetectionApiService) SpamDetectFilePost(ctx context.Context, localVarOptionals *SpamDetectionApiSpamDetectFilePostOpts) (SpamDetectionResponse, *http.Response, error) {
+	var (
+		localVarHttpMethod = strings.ToUpper("Post")
+		localVarPostBody   interface{}
+		localVarFileName   string
+		localVarFileBytes  []byte
+		localVarReturnValue SpamDetectionResponse
+	)
+
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/spam/detect/file"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHttpContentTypes := []string{"multipart/form-data"}
+
+	// set Content-Type header
+	localVarHttpContentType := selectHeaderContentType(localVarHttpContentTypes)
+	if localVarHttpContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHttpContentType
+	}
+
+	// to determine the Accept header
+	localVarHttpHeaderAccepts := []string{"text/plain", "application/json", "text/json"}
+
+	// set Accept header
+	localVarHttpHeaderAccept := selectHeaderAccept(localVarHttpHeaderAccepts)
+	if localVarHttpHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
+	}
+	if localVarOptionals != nil && localVarOptionals.Model.IsSet() {
+		localVarHeaderParams["model"] = parameterToString(localVarOptionals.Model.Value(), "")
+	}
+    var localVarFile *os.File
+	if localVarOptionals != nil && localVarOptionals.InputFile.IsSet() {
+		localVarFileOk := false
+		localVarFile, localVarFileOk = localVarOptionals.InputFile.Value().(*os.File)
+		if !localVarFileOk {
+				return localVarReturnValue, nil, reportError("inputFile should be *os.File")
+		}
+	}
+	if localVarFile != nil {
+		fbs, _ := ioutil.ReadAll(localVarFile)
+		localVarFileBytes = fbs
+		localVarFileName = localVarFile.Name()
+		localVarFile.Close()
+	}
+	if ctx != nil {
+		// API Key Authentication
+		if auth, ok := ctx.Value(ContextAPIKey).(APIKey); ok {
+			var key string
+			if auth.Prefix != "" {
+				key = auth.Prefix + " " + auth.Key
+			} else {
+				key = auth.Key
+			}
+			localVarHeaderParams["Apikey"] = key
+			
+		}
+	}
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHttpResponse, err := a.client.callAPI(r)
+	if err != nil || localVarHttpResponse == nil {
+		return localVarReturnValue, localVarHttpResponse, err
+	}
+
+	localVarBody, err := ioutil.ReadAll(localVarHttpResponse.Body)
+	localVarHttpResponse.Body.Close()
+	if err != nil {
+		return localVarReturnValue, localVarHttpResponse, err
+	}
+
+	if localVarHttpResponse.StatusCode < 300 {
+		// If we succeed, return the data, otherwise pass on to decode error.
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+		if err == nil { 
+			return localVarReturnValue, localVarHttpResponse, err
+		}
+	}
+
+	if localVarHttpResponse.StatusCode >= 300 {
+		newErr := GenericSwaggerError{
+			body: localVarBody,
+			error: localVarHttpResponse.Status,
+		}
+		
+		if localVarHttpResponse.StatusCode == 200 {
+			var v SpamDetectionResponse
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+				if err != nil {
+					newErr.error = err.Error()
+					return localVarReturnValue, localVarHttpResponse, newErr
+				}
+				newErr.model = v
+				return localVarReturnValue, localVarHttpResponse, newErr
+		}
+		
+		return localVarReturnValue, localVarHttpResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHttpResponse, nil
+}
+
+/* 
+SpamDetectionApiService Perform advanced AI spam detection and classification against a form submission.  Analyzes form input content as well as embedded URLs with AI deep learnign to detect spam, phishing and other unsafe content.  Uses 25-100 API calls depending on model selected.
+ * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param optional nil or *SpamDetectionApiSpamDetectFormSubmissionAdvancedPostOpts - Optional Parameters:
+     * @param "Body" (optional.Interface of SpamDetectionAdvancedFormSubmissionRequest) -  Spam detection request
+
+@return SpamDetectionFormSubmissionAdvancedResponse
+*/
+
+type SpamDetectionApiSpamDetectFormSubmissionAdvancedPostOpts struct { 
+	Body optional.Interface
+}
+
+func (a *SpamDetectionApiService) SpamDetectFormSubmissionAdvancedPost(ctx context.Context, localVarOptionals *SpamDetectionApiSpamDetectFormSubmissionAdvancedPostOpts) (SpamDetectionFormSubmissionAdvancedResponse, *http.Response, error) {
+	var (
+		localVarHttpMethod = strings.ToUpper("Post")
+		localVarPostBody   interface{}
+		localVarFileName   string
+		localVarFileBytes  []byte
+		localVarReturnValue SpamDetectionFormSubmissionAdvancedResponse
+	)
+
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/spam/detect/form-submission/advanced"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHttpContentTypes := []string{"application/json", "text/json", "application/_*+json"}
+
+	// set Content-Type header
+	localVarHttpContentType := selectHeaderContentType(localVarHttpContentTypes)
+	if localVarHttpContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHttpContentType
+	}
+
+	// to determine the Accept header
+	localVarHttpHeaderAccepts := []string{"text/plain", "application/json", "text/json"}
+
+	// set Accept header
+	localVarHttpHeaderAccept := selectHeaderAccept(localVarHttpHeaderAccepts)
+	if localVarHttpHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
+	}
+	// body params
+	if localVarOptionals != nil && localVarOptionals.Body.IsSet() {
+		
+		localVarOptionalBody, localVarOptionalBodyok := localVarOptionals.Body.Value().(SpamDetectionAdvancedFormSubmissionRequest)
+		if !localVarOptionalBodyok {
+				return localVarReturnValue, nil, reportError("body should be SpamDetectionAdvancedFormSubmissionRequest")
+		}
+		localVarPostBody = &localVarOptionalBody
+	}
+	if ctx != nil {
+		// API Key Authentication
+		if auth, ok := ctx.Value(ContextAPIKey).(APIKey); ok {
+			var key string
+			if auth.Prefix != "" {
+				key = auth.Prefix + " " + auth.Key
+			} else {
+				key = auth.Key
+			}
+			localVarHeaderParams["Apikey"] = key
+			
+		}
+	}
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHttpResponse, err := a.client.callAPI(r)
+	if err != nil || localVarHttpResponse == nil {
+		return localVarReturnValue, localVarHttpResponse, err
+	}
+
+	localVarBody, err := ioutil.ReadAll(localVarHttpResponse.Body)
+	localVarHttpResponse.Body.Close()
+	if err != nil {
+		return localVarReturnValue, localVarHttpResponse, err
+	}
+
+	if localVarHttpResponse.StatusCode < 300 {
+		// If we succeed, return the data, otherwise pass on to decode error.
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+		if err == nil { 
+			return localVarReturnValue, localVarHttpResponse, err
+		}
+	}
+
+	if localVarHttpResponse.StatusCode >= 300 {
+		newErr := GenericSwaggerError{
+			body: localVarBody,
+			error: localVarHttpResponse.Status,
+		}
+		
+		if localVarHttpResponse.StatusCode == 200 {
+			var v SpamDetectionFormSubmissionAdvancedResponse
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
+				if err != nil {
+					newErr.error = err.Error()
+					return localVarReturnValue, localVarHttpResponse, newErr
+				}
+				newErr.model = v
+				return localVarReturnValue, localVarHttpResponse, newErr
+		}
+		
+		return localVarReturnValue, localVarHttpResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHttpResponse, nil
+}
 
 /* 
 SpamDetectionApiService Perform advanced AI spam detection and classification against input text string.  Analyzes input content as well as embedded URLs with AI deep learnign to detect spam, phishing and other unsafe content.  Uses 25-100 API calls depending on model selected.
