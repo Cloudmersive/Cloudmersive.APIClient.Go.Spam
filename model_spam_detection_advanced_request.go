@@ -21,4 +21,6 @@ type SpamDetectionAdvancedRequest struct {
 	AllowPromotionalContent bool `json:"AllowPromotionalContent,omitempty"`
 	// True if phishing should be allowed, false otherwise
 	AllowPhishing bool `json:"AllowPhishing,omitempty"`
+	// Apply a Custom Policy for Spam Enforcement by providing the ID; to create a Custom Policy, navigate to the Cloudmersive Management Portal and select Custom Policies.  Requires Managed Instance or Private Cloud
+	CustomPolicyID string `json:"CustomPolicyID,omitempty"`
 }

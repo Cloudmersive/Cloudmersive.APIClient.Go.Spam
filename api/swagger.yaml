@@ -11,10 +11,10 @@ paths:
     post:
       tags:
       - "SpamDetection"
-      summary: "Perform AI spam detection and classification against input text string.\
-        \  Analyzes input content as well as embedded URLs with AI deep learnign to\
-        \ detect spam, phishing and other unsafe content.  Uses 25-75 API calls depending\
-        \ on model selected."
+      summary: "Perform AI spam detection and classification against input text string"
+      description: "Analyzes input content as well as embedded URLs with AI deep learnign\
+        \ to detect spam, phishing and other unsafe content.  Uses 25-75 API calls\
+        \ depending on model selected."
       consumes:
       - "application/json"
       - "text/json"
@@ -36,47 +36,15 @@ paths:
           description: "OK"
           schema:
             $ref: "#/definitions/SpamDetectionResponse"
-  /spam/detect/file:
-    post:
-      tags:
-      - "SpamDetection"
-      summary: "Perform AI spam detection and classification on an input image or\
-        \ document (PDF or DOCX).  Analyzes input content as well as embedded URLs\
-        \ with AI deep learnign to detect spam, phishing and other unsafe content.\
-        \  Uses 100-125 API calls depending on model selected."
-      consumes:
-      - "multipart/form-data"
-      produces:
-      - "text/plain"
-      - "application/json"
-      - "text/json"
-      parameters:
-      - name: "model"
-        in: "header"
-        description: "Model to use; default setting is Advanced"
-        required: false
-        type: "string"
-        default: "Advanced"
-        x-exportParamName: "Model"
-        x-optionalDataType: "String"
-      - name: "inputFile"
-        in: "formData"
-        required: false
-        type: "file"
-        x-exportParamName: "InputFile"
-      responses:
-        "200":
-          description: "OK"
-          schema:
-            $ref: "#/definitions/SpamDetectionResponse"
   /spam/detect/text-string/advanced:
     post:
       tags:
       - "SpamDetection"
       summary: "Perform advanced AI spam detection and classification against input\
-        \ text string.  Analyzes input content as well as embedded URLs with AI deep\
-        \ learnign to detect spam, phishing and other unsafe content.  Uses 25-100\
-        \ API calls depending on model selected."
+        \ text string"
+      description: "Analyzes input content as well as embedded URLs with AI deep learnign\
+        \ to detect spam, phishing and other unsafe content.  Uses 25-100 API calls\
+        \ depending on model selected."
       consumes:
       - "application/json"
       - "text/json"
@@ -103,8 +71,9 @@ paths:
       tags:
       - "SpamDetection"
       summary: "Perform advanced AI spam detection and classification against a form\
-        \ submission.  Analyzes form input content as well as embedded URLs with AI\
-        \ deep learnign to detect spam, phishing and other unsafe content.  Uses 25-100\
+        \ submission"
+      description: "Analyzes form input content as well as embedded URLs with AI deep\
+        \ learnign to detect spam, phishing and other unsafe content.  Uses 25-100\
         \ API calls depending on model selected."
       consumes:
       - "application/json"
@@ -127,14 +96,51 @@ paths:
           description: "OK"
           schema:
             $ref: "#/definitions/SpamDetectionFormSubmissionAdvancedResponse"
+  /spam/detect/file:
+    post:
+      tags:
+      - "SpamDetection"
+      summary: "Perform AI spam detection and classification on an input image or\
+        \ document (PDF or DOCX)"
+      description: "Analyzes input content as well as embedded URLs with AI deep learnign\
+        \ to detect spam, phishing and other unsafe content.  Uses 100-125 API calls\
+        \ depending on model selected.  Supported file formats include DOCX, PDF,\
+        \ XLSX, PPTX, EML, MSG, JPG, PNG and WEBP."
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "text/plain"
+      - "application/json"
+      - "text/json"
+      parameters:
+      - name: "model"
+        in: "header"
+        description: "Model to use; default setting is Advanced"
+        required: false
+        type: "string"
+        default: "Advanced"
+        x-exportParamName: "Model"
+        x-optionalDataType: "String"
+      - name: "inputFile"
+        in: "formData"
+        required: false
+        type: "file"
+        x-exportParamName: "InputFile"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/SpamDetectionResponse"
   /spam/detect/file/advanced:
     post:
       tags:
       - "SpamDetection"
       summary: "Perform advanced AI spam detection and classification against input\
-        \ text string.  Analyzes input content as well as embedded URLs with AI deep\
-        \ learnign to detect spam, phishing and other unsafe content.  Uses 25-100\
-        \ API calls depending on model selected."
+        \ text file."
+      description: "Analyzes input content as well as embedded URLs with AI deep learning\
+        \ to detect spam, phishing and other unsafe content.  Uses 25-100 API calls\
+        \ depending on model selected.  Supported file formats include DOCX, PDF,\
+        \ XLSX, PPTX, EML, MSG, JPG, PNG and WEBP."
       consumes:
       - "multipart/form-data"
       produces:
@@ -184,6 +190,16 @@ paths:
         default: true
         x-exportParamName: "AllowPromotionalContent"
         x-optionalDataType: "Bool"
+      - name: "customPolicyId"
+        in: "header"
+        description: "Apply a Custom Policy for Spam Enforcement by providing the\
+          \ ID; to create a Custom Policy, navigate to the Cloudmersive Management\
+          \ Portal and select Custom Policies.  Requires Managed Instance or Private\
+          \ Cloud"
+        required: false
+        type: "string"
+        x-exportParamName: "CustomPolicyId"
+        x-optionalDataType: "String"
       - name: "inputFile"
         in: "formData"
         required: false
@@ -270,9 +286,16 @@ definitions:
         type: "boolean"
         example: false
         description: "True if phishing should be allowed, false otherwise"
+      CustomPolicyID:
+        type: "string"
+        description: "Apply a Custom Policy for Spam Enforcement by providing the\
+          \ ID; to create a Custom Policy, navigate to the Cloudmersive Management\
+          \ Portal and select Custom Policies.  Requires Managed Instance or Private\
+          \ Cloud"
     description: "AI advanced spam detection request"
     example:
       AllowPhishing: false
+      CustomPolicyID: "CustomPolicyID"
       InputString: "Buy bitcoin now!!!!"
       Model: "Advanced"
       AllowUnsolicitedSales: false

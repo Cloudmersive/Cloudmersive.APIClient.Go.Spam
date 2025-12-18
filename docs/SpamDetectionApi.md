@@ -4,16 +4,18 @@ All URIs are relative to *https://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**SpamDetectFileAdvancedPost**](SpamDetectionApi.md#SpamDetectFileAdvancedPost) | **Post** /spam/detect/file/advanced | Perform advanced AI spam detection and classification against input text string.  Analyzes input content as well as embedded URLs with AI deep learnign to detect spam, phishing and other unsafe content.  Uses 25-100 API calls depending on model selected.
-[**SpamDetectFilePost**](SpamDetectionApi.md#SpamDetectFilePost) | **Post** /spam/detect/file | Perform AI spam detection and classification on an input image or document (PDF or DOCX).  Analyzes input content as well as embedded URLs with AI deep learnign to detect spam, phishing and other unsafe content.  Uses 100-125 API calls depending on model selected.
-[**SpamDetectFormSubmissionAdvancedPost**](SpamDetectionApi.md#SpamDetectFormSubmissionAdvancedPost) | **Post** /spam/detect/form-submission/advanced | Perform advanced AI spam detection and classification against a form submission.  Analyzes form input content as well as embedded URLs with AI deep learnign to detect spam, phishing and other unsafe content.  Uses 25-100 API calls depending on model selected.
-[**SpamDetectTextStringAdvancedPost**](SpamDetectionApi.md#SpamDetectTextStringAdvancedPost) | **Post** /spam/detect/text-string/advanced | Perform advanced AI spam detection and classification against input text string.  Analyzes input content as well as embedded URLs with AI deep learnign to detect spam, phishing and other unsafe content.  Uses 25-100 API calls depending on model selected.
-[**SpamDetectTextStringPost**](SpamDetectionApi.md#SpamDetectTextStringPost) | **Post** /spam/detect/text-string | Perform AI spam detection and classification against input text string.  Analyzes input content as well as embedded URLs with AI deep learnign to detect spam, phishing and other unsafe content.  Uses 25-75 API calls depending on model selected.
+[**SpamDetectFileAdvancedPost**](SpamDetectionApi.md#SpamDetectFileAdvancedPost) | **Post** /spam/detect/file/advanced | Perform advanced AI spam detection and classification against input text file.
+[**SpamDetectFilePost**](SpamDetectionApi.md#SpamDetectFilePost) | **Post** /spam/detect/file | Perform AI spam detection and classification on an input image or document (PDF or DOCX)
+[**SpamDetectFormSubmissionAdvancedPost**](SpamDetectionApi.md#SpamDetectFormSubmissionAdvancedPost) | **Post** /spam/detect/form-submission/advanced | Perform advanced AI spam detection and classification against a form submission
+[**SpamDetectTextStringAdvancedPost**](SpamDetectionApi.md#SpamDetectTextStringAdvancedPost) | **Post** /spam/detect/text-string/advanced | Perform advanced AI spam detection and classification against input text string
+[**SpamDetectTextStringPost**](SpamDetectionApi.md#SpamDetectTextStringPost) | **Post** /spam/detect/text-string | Perform AI spam detection and classification against input text string
 
 
 # **SpamDetectFileAdvancedPost**
 > SpamDetectionAdvancedResponse SpamDetectFileAdvancedPost(ctx, optional)
-Perform advanced AI spam detection and classification against input text string.  Analyzes input content as well as embedded URLs with AI deep learnign to detect spam, phishing and other unsafe content.  Uses 25-100 API calls depending on model selected.
+Perform advanced AI spam detection and classification against input text file.
+
+Analyzes input content as well as embedded URLs with AI deep learning to detect spam, phishing and other unsafe content.  Uses 25-100 API calls depending on model selected.  Supported file formats include DOCX, PDF, XLSX, PPTX, EML, MSG, JPG, PNG and WEBP.
 
 ### Required Parameters
 
@@ -32,6 +34,7 @@ Name | Type | Description  | Notes
  **allowPhishing** | **optional.Bool**| True if phishing should be allowed, false otherwise | [default to false]
  **allowUnsolicitedSales** | **optional.Bool**| True if unsolicited sales should be allowed, false otherwise | [default to false]
  **allowPromotionalContent** | **optional.Bool**| True if promotional content should be allowed, false otherwise | [default to true]
+ **customPolicyId** | **optional.String**| Apply a Custom Policy for Spam Enforcement by providing the ID; to create a Custom Policy, navigate to the Cloudmersive Management Portal and select Custom Policies.  Requires Managed Instance or Private Cloud | 
  **inputFile** | **optional.Interface of *os.File**|  | 
 
 ### Return type
@@ -51,7 +54,9 @@ Name | Type | Description  | Notes
 
 # **SpamDetectFilePost**
 > SpamDetectionResponse SpamDetectFilePost(ctx, optional)
-Perform AI spam detection and classification on an input image or document (PDF or DOCX).  Analyzes input content as well as embedded URLs with AI deep learnign to detect spam, phishing and other unsafe content.  Uses 100-125 API calls depending on model selected.
+Perform AI spam detection and classification on an input image or document (PDF or DOCX)
+
+Analyzes input content as well as embedded URLs with AI deep learnign to detect spam, phishing and other unsafe content.  Uses 100-125 API calls depending on model selected.  Supported file formats include DOCX, PDF, XLSX, PPTX, EML, MSG, JPG, PNG and WEBP.
 
 ### Required Parameters
 
@@ -85,7 +90,9 @@ Name | Type | Description  | Notes
 
 # **SpamDetectFormSubmissionAdvancedPost**
 > SpamDetectionFormSubmissionAdvancedResponse SpamDetectFormSubmissionAdvancedPost(ctx, optional)
-Perform advanced AI spam detection and classification against a form submission.  Analyzes form input content as well as embedded URLs with AI deep learnign to detect spam, phishing and other unsafe content.  Uses 25-100 API calls depending on model selected.
+Perform advanced AI spam detection and classification against a form submission
+
+Analyzes form input content as well as embedded URLs with AI deep learnign to detect spam, phishing and other unsafe content.  Uses 25-100 API calls depending on model selected.
 
 ### Required Parameters
 
@@ -118,7 +125,9 @@ Name | Type | Description  | Notes
 
 # **SpamDetectTextStringAdvancedPost**
 > SpamDetectionAdvancedResponse SpamDetectTextStringAdvancedPost(ctx, optional)
-Perform advanced AI spam detection and classification against input text string.  Analyzes input content as well as embedded URLs with AI deep learnign to detect spam, phishing and other unsafe content.  Uses 25-100 API calls depending on model selected.
+Perform advanced AI spam detection and classification against input text string
+
+Analyzes input content as well as embedded URLs with AI deep learnign to detect spam, phishing and other unsafe content.  Uses 25-100 API calls depending on model selected.
 
 ### Required Parameters
 
@@ -151,7 +160,9 @@ Name | Type | Description  | Notes
 
 # **SpamDetectTextStringPost**
 > SpamDetectionResponse SpamDetectTextStringPost(ctx, optional)
-Perform AI spam detection and classification against input text string.  Analyzes input content as well as embedded URLs with AI deep learnign to detect spam, phishing and other unsafe content.  Uses 25-75 API calls depending on model selected.
+Perform AI spam detection and classification against input text string
+
+Analyzes input content as well as embedded URLs with AI deep learnign to detect spam, phishing and other unsafe content.  Uses 25-75 API calls depending on model selected.
 
 ### Required Parameters
 

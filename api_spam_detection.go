@@ -28,7 +28,8 @@ var (
 type SpamDetectionApiService service
 
 /* 
-SpamDetectionApiService Perform advanced AI spam detection and classification against input text string.  Analyzes input content as well as embedded URLs with AI deep learnign to detect spam, phishing and other unsafe content.  Uses 25-100 API calls depending on model selected.
+SpamDetectionApiService Perform advanced AI spam detection and classification against input text file.
+Analyzes input content as well as embedded URLs with AI deep learning to detect spam, phishing and other unsafe content.  Uses 25-100 API calls depending on model selected.  Supported file formats include DOCX, PDF, XLSX, PPTX, EML, MSG, JPG, PNG and WEBP.
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param optional nil or *SpamDetectionApiSpamDetectFileAdvancedPostOpts - Optional Parameters:
      * @param "Model" (optional.String) -  Optional: Specify which AI model to use.  Possible choices are Normal and Advanced.  Default is Advanced.
@@ -36,6 +37,7 @@ SpamDetectionApiService Perform advanced AI spam detection and classification ag
      * @param "AllowPhishing" (optional.Bool) -  True if phishing should be allowed, false otherwise
      * @param "AllowUnsolicitedSales" (optional.Bool) -  True if unsolicited sales should be allowed, false otherwise
      * @param "AllowPromotionalContent" (optional.Bool) -  True if promotional content should be allowed, false otherwise
+     * @param "CustomPolicyId" (optional.String) -  Apply a Custom Policy for Spam Enforcement by providing the ID; to create a Custom Policy, navigate to the Cloudmersive Management Portal and select Custom Policies.  Requires Managed Instance or Private Cloud
      * @param "InputFile" (optional.Interface of *os.File) - 
 
 @return SpamDetectionAdvancedResponse
@@ -47,6 +49,7 @@ type SpamDetectionApiSpamDetectFileAdvancedPostOpts struct {
 	AllowPhishing optional.Bool
 	AllowUnsolicitedSales optional.Bool
 	AllowPromotionalContent optional.Bool
+	CustomPolicyId optional.String
 	InputFile optional.Interface
 }
 
@@ -97,6 +100,9 @@ func (a *SpamDetectionApiService) SpamDetectFileAdvancedPost(ctx context.Context
 	}
 	if localVarOptionals != nil && localVarOptionals.AllowPromotionalContent.IsSet() {
 		localVarHeaderParams["allowPromotionalContent"] = parameterToString(localVarOptionals.AllowPromotionalContent.Value(), "")
+	}
+	if localVarOptionals != nil && localVarOptionals.CustomPolicyId.IsSet() {
+		localVarHeaderParams["customPolicyId"] = parameterToString(localVarOptionals.CustomPolicyId.Value(), "")
 	}
     var localVarFile *os.File
 	if localVarOptionals != nil && localVarOptionals.InputFile.IsSet() {
@@ -173,7 +179,8 @@ func (a *SpamDetectionApiService) SpamDetectFileAdvancedPost(ctx context.Context
 }
 
 /* 
-SpamDetectionApiService Perform AI spam detection and classification on an input image or document (PDF or DOCX).  Analyzes input content as well as embedded URLs with AI deep learnign to detect spam, phishing and other unsafe content.  Uses 100-125 API calls depending on model selected.
+SpamDetectionApiService Perform AI spam detection and classification on an input image or document (PDF or DOCX)
+Analyzes input content as well as embedded URLs with AI deep learnign to detect spam, phishing and other unsafe content.  Uses 100-125 API calls depending on model selected.  Supported file formats include DOCX, PDF, XLSX, PPTX, EML, MSG, JPG, PNG and WEBP.
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param optional nil or *SpamDetectionApiSpamDetectFilePostOpts - Optional Parameters:
      * @param "Model" (optional.String) -  Model to use; default setting is Advanced
@@ -298,7 +305,8 @@ func (a *SpamDetectionApiService) SpamDetectFilePost(ctx context.Context, localV
 }
 
 /* 
-SpamDetectionApiService Perform advanced AI spam detection and classification against a form submission.  Analyzes form input content as well as embedded URLs with AI deep learnign to detect spam, phishing and other unsafe content.  Uses 25-100 API calls depending on model selected.
+SpamDetectionApiService Perform advanced AI spam detection and classification against a form submission
+Analyzes form input content as well as embedded URLs with AI deep learnign to detect spam, phishing and other unsafe content.  Uses 25-100 API calls depending on model selected.
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param optional nil or *SpamDetectionApiSpamDetectFormSubmissionAdvancedPostOpts - Optional Parameters:
      * @param "Body" (optional.Interface of SpamDetectionAdvancedFormSubmissionRequest) -  Spam detection request
@@ -413,7 +421,8 @@ func (a *SpamDetectionApiService) SpamDetectFormSubmissionAdvancedPost(ctx conte
 }
 
 /* 
-SpamDetectionApiService Perform advanced AI spam detection and classification against input text string.  Analyzes input content as well as embedded URLs with AI deep learnign to detect spam, phishing and other unsafe content.  Uses 25-100 API calls depending on model selected.
+SpamDetectionApiService Perform advanced AI spam detection and classification against input text string
+Analyzes input content as well as embedded URLs with AI deep learnign to detect spam, phishing and other unsafe content.  Uses 25-100 API calls depending on model selected.
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param optional nil or *SpamDetectionApiSpamDetectTextStringAdvancedPostOpts - Optional Parameters:
      * @param "Body" (optional.Interface of SpamDetectionAdvancedRequest) -  Spam detection request
@@ -528,7 +537,8 @@ func (a *SpamDetectionApiService) SpamDetectTextStringAdvancedPost(ctx context.C
 }
 
 /* 
-SpamDetectionApiService Perform AI spam detection and classification against input text string.  Analyzes input content as well as embedded URLs with AI deep learnign to detect spam, phishing and other unsafe content.  Uses 25-75 API calls depending on model selected.
+SpamDetectionApiService Perform AI spam detection and classification against input text string
+Analyzes input content as well as embedded URLs with AI deep learnign to detect spam, phishing and other unsafe content.  Uses 25-75 API calls depending on model selected.
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param optional nil or *SpamDetectionApiSpamDetectTextStringPostOpts - Optional Parameters:
      * @param "Body" (optional.Interface of SpamDetectionRequest) -  Spam detection request
