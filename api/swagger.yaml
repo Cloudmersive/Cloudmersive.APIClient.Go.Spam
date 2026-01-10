@@ -4,6 +4,9 @@ info:
   description: "Easily and directly scan and block spam security threats in input."
   version: "v1"
   title: "spamapi"
+host: "api.cloudmersive.com"
+schemes:
+- "https"
 security:
 - Apikey: []
 paths:
